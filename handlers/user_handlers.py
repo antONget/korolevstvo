@@ -11,7 +11,7 @@ from aiogram.types import CallbackQuery
 
 
 router = Router()
-
+admin_id = 843554518
 
 # состояния бота
 class Form(StatesGroup):
@@ -149,7 +149,7 @@ async def get_photo(message: Message, state: FSMContext, bot: Bot):
     file_id = message.photo[-1].file_id
     update_photo(message, file_id)
     user_dict[message.chat.id] = await state.get_data()
-    await bot.send_photo(chat_id=843554518,
+    await bot.send_photo(chat_id=admin_id,
                          photo=file_id,
                          caption=f'ИМЯ: {user_dict[message.chat.id]["name"]}\n'
                                  f'ДАТА РОЖДЕНИЯ: {user_dict[message.chat.id]["birthday"]}\n'
@@ -167,9 +167,11 @@ async def get_photo(message: Message):
 
 @router.callback_query(F.data == 'chekin')
 async def process_stage3(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    print(callback.message)
     await state.clear()
     await callback.answer()
-    await bot.send_message(chat_id=843554518, text=f'Пользователь {callback.message.from_user.username}'
+    await bot.send_message(chat_id=admin_id, text=f'Пользователь <a href="https://t.me/{callback.message.chat.username}">'
+                                                   f'{callback.message.chat.username}</a>'
                                                    f' записался на полный разбор!')
     await callback.message.answer(text=MESSAGE_TEXT['text2'])
     await callback.message.answer(text=MESSAGE_TEXT['text3'])
