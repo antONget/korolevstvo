@@ -35,9 +35,13 @@ user_dict = {}
 @router.message(CommandStart(), StateFilter(default_state))
 async def process_start_command(message: Message, state: FSMContext) -> None:
     await message.answer(text=MESSAGE_TEXT['/start'])
+
+    file_id = 'AgACAgIAAxkBAAID62V7PJxkpl-S7yifd70ICjD_eWDOAALG2jEb2xzZSzBke6AVjDYnAQADAgADeQADMwQ'
+    file_unique_id = 'AQADxtoxG9sc2Ut-'
+    await message.answer_photo(file_id, caption=MESSAGE_TEXT['presentation'])
+
     await message.answer(text=MESSAGE_TEXT['get_name'])
     await state.set_state(Form.name)
-
 
 # Этот хэндлер срабатывает на команду /help
 @router.message(Command(commands=['help']))
@@ -85,7 +89,8 @@ async def process_phone(message: Message, state: FSMContext) -> None:
         phone = message.text
         await state.update_data(phone=phone)
     await state.set_state(Form.zapros)
-    await message.answer(text=MESSAGE_TEXT['zapros'])
+    markup = types.ReplyKeyboardRemove()
+    await message.answer(text=MESSAGE_TEXT['zapros'], reply_markup=markup)
 
 
 # Отлавливаем запрос пользователя
@@ -110,19 +115,22 @@ async def process_buttons_press(callback: CallbackQuery):
 async def process_buttons_press(callback: CallbackQuery):
     file_id = 'BAACAgIAAxkBAAICFWV4ue48KM4t4EK91cfU2IQh4x0HAAIEQgAC0z7IS7_e9PPsWVogMwQ'
     file_unique_id = 'AgADBEIAAtM-yEs'
-    await callback.message.answer_video(file_id)
+    keyboard = keyboard_sonastroika1()
+    await callback.message.answer_video(file_id, reply_markup=keyboard)
+    await callback.answer()
 
 @router.callback_query(F.data == 'pass')
-async def process_buttons_press(callback: CallbackQuery):
+async def process_stage1(callback: CallbackQuery):
     keyboard = keyboard_stage1()
     await callback.answer()
-    await callback.message.answer(text=MESSAGE_TEXT['stage1'], reply_markup=keyboard)
-
-@router.callback_query(F.data=='photo_stage1')
-async def process_buttons_press(callback: CallbackQuery):
     file_id = 'AgACAgIAAxkBAAICXGV4vpgZ2qktpv-sPd-MUVVaCMPMAAJx0jEb0z7IS9_r8FYtrYQJAQADAgADeQADMwQ'
-    file_unique_id = 'AQADcdIxG9M-yEt-'
-    await callback.message.answer_photo(file_id)
+    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage1'], reply_markup=keyboard)
+
+# @router.callback_query(F.data=='photo_stage1')
+# async def process_stage1(callback: CallbackQuery):
+#     file_id = 'AgACAgIAAxkBAAICXGV4vpgZ2qktpv-sPd-MUVVaCMPMAAJx0jEb0z7IS9_r8FYtrYQJAQADAgADeQADMwQ'
+#     file_unique_id = 'AQADcdIxG9M-yEt-'
+#     await callback.message.answer_photo(file_id)
 
 
 @router.callback_query(F.data=='photo_stage3')
@@ -132,23 +140,27 @@ async def process_buttons_press(callback: CallbackQuery):
     await callback.message.answer_photo(file_id)
 
 
-@router.callback_query(F.data=='photo_stage2')
-async def process_buttons_press(callback: CallbackQuery):
-    file_id = 'AgACAgIAAxkBAAICXmV4v0-b1V9i61zYSAABidS3YaUmMAACeNIxG9M-yEu_oysMuEMLPwEAAwIAA3kAAzME'
-    file_unique_id = 'AQADeNIxG9M-yEt-'
-    await callback.message.answer_photo(file_id)
+# @router.callback_query(F.data=='photo_stage2')
+# async def process_buttons_press(callback: CallbackQuery):
+#     file_id = 'AgACAgIAAxkBAAICXmV4v0-b1V9i61zYSAABidS3YaUmMAACeNIxG9M-yEu_oysMuEMLPwEAAwIAA3kAAzME'
+#     file_unique_id = 'AQADeNIxG9M-yEt-'
+#     await callback.message.answer_photo(file_id)
 
 @router.callback_query(F.data=='done_stage1')
 async def process_buttons_press(callback: CallbackQuery):
     keyboard = keyboard_stage2()
+    file_id = 'AgACAgIAAxkBAAICYGV4v35xZmB41ClGLpesMojJdo_UAAJ50jEb0z7ISwuH-jQDDYlvAQADAgADeQADMwQ'
     await callback.answer()
-    await callback.message.answer(text=MESSAGE_TEXT['stage2'], reply_markup=keyboard)
+    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage2'])
+    await callback.message.answer(text=MESSAGE_TEXT['stage2_1'])
+    await callback.message.answer(text=MESSAGE_TEXT['stage2_2'], reply_markup=keyboard)
 
 @router.callback_query(F.data=='done_stage2')
 async def process_buttons_press(callback: CallbackQuery):
     keyboard = keyboard_stage3()
     await callback.answer()
-    await callback.message.answer(text=MESSAGE_TEXT['stage3'], reply_markup=keyboard)
+    file_id = 'AgACAgIAAxkBAAICXmV4v0-b1V9i61zYSAABidS3YaUmMAACeNIxG9M-yEu_oysMuEMLPwEAAwIAA3kAAzME'
+    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage3'], reply_markup=keyboard)
 
 
 @router.callback_query(F.data=='done_stage3')
@@ -181,8 +193,10 @@ async def get_photo(message: Message):
     await message.answer(text='Это не похоже на фото! Пришли мне фото')
 
 @router.callback_query(F.data=='chekin')
-async def process_stage3(callback: CallbackQuery, state: FSMContext):
+async def process_stage3(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.answer()
+    await bot.send_message(chat_id=843554518, text=f'Пользователь {callback.message.from_user.username} записался на полный разбор!')
+
     await callback.message.answer(text=MESSAGE_TEXT['text2'])
     await callback.message.answer(text=MESSAGE_TEXT['text3'])

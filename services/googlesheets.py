@@ -61,5 +61,11 @@ def update_photo(message, photo):
     row = res[-1]["row"] + 1
     client_sheet.update(f'F{row}', photo)
 
+def update_chekin(message):
+    ID = message.chat.id
+    res = values_row_col(ID)
+    row = res[-1]["row"] + 1
+    client_sheet.update(f'G{row}', '✅')
+
 if __name__ == '__main__':
     values_row_col(value='anna')

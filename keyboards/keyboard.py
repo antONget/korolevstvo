@@ -38,6 +38,21 @@ def keyboard_sonastroika():
     return keyboard
 
 
+def keyboard_sonastroika1():
+    # Создаем объекты инлайн-кнопок
+    button_s = InlineKeyboardButton(
+        text='Сонастройка',
+        callback_data='sonastroika'
+    )
+    button_p = InlineKeyboardButton(
+        text='Дальше',
+        callback_data='pass'
+    )
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[[button_p]]
+    )
+    return keyboard
+
 def keyboard_stage1():
     # Создаем объекты инлайн-кнопок
     button_photo = InlineKeyboardButton(
@@ -49,7 +64,7 @@ def keyboard_stage1():
         callback_data='done_stage1'
     )
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[[button_photo, button_done]]
+        inline_keyboard=[[button_done]]
     )
     return keyboard
 
@@ -65,7 +80,7 @@ def keyboard_stage2():
         callback_data='done_stage2'
     )
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[[button_photo, button_done]]
+        inline_keyboard=[[button_done]]
     )
     return keyboard
 
@@ -81,7 +96,7 @@ def keyboard_stage3():
         callback_data='done_stage3'
     )
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[[button_photo, button_done]]
+        inline_keyboard=[[button_done]]
     )
     return keyboard
 
