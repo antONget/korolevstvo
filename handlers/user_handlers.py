@@ -11,7 +11,7 @@ from aiogram.types import CallbackQuery
 
 
 router = Router()
-admin_id = 843554518
+admin_id = 713697088
 
 # состояния бота
 class Form(StatesGroup):
@@ -28,10 +28,10 @@ user_dict = {}
 
 
 # Этот хэндлер срабатывает на команду /start
-@router.message(CommandStart(), StateFilter(default_state))
+@router.message(CommandStart())
 async def process_start_command(message: Message, state: FSMContext) -> None:
-    await message.answer(text=MESSAGE_TEXT['/start'])
-    file_id_1 = "AgACAgIAAxkBAAMEZXyHSAwwS-GB80Vsq8SB8vmVq0AAAvnRMRv_zuhLAyIVus6JrtYBAAMCAAN5AAMzBA"
+    # await message.answer(text=MESSAGE_TEXT['/start'])
+    file_id_1 = "AgACAgIAAxkBAAOiZX2YRiLAYNbAjVZQyiogQZ0UsN4AAlvPMRuERPBLD0MTby2BjhgBAAMCAAN5AAMzBA"
     await message.answer_photo(file_id_1, caption=MESSAGE_TEXT['presentation'])
     await message.answer(text=MESSAGE_TEXT['get_name'])
     await state.set_state(Form.name)
@@ -104,9 +104,9 @@ async def process_buttons_press(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'sonastroika')
 async def process_buttons_press(callback: CallbackQuery):
-    file_id = 'BAACAgIAAxkBAAMmZXyRXOUduR-Xyqtwn4avQskTY1cAAjk8AAL_zuhLloE5hilSuKIzBA'
+    file_id_2 = 'BAACAgIAAxkBAAMaZX2C7Tm-KMelRVVgJcptI8mqqjAAArBAAAKERPBLNmnlXtsLv3AzBA'
     keyboard = keyboard_sonastroika1()
-    await callback.message.answer_video(file_id, reply_markup=keyboard)
+    await callback.message.answer_video(file_id_2, reply_markup=keyboard)
     await callback.answer()
 
 
@@ -114,16 +114,16 @@ async def process_buttons_press(callback: CallbackQuery):
 async def process_stage1(callback: CallbackQuery):
     keyboard = keyboard_stage1()
     await callback.answer()
-    file_id = 'AgACAgIAAxkBAAMgZXyQqupqfzzXsrxR9ZEuEHx6BMIAAj7SMRv_zuhL3_wUlZxLJygBAAMCAAN5AAMzBA'
-    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage1'], reply_markup=keyboard)
+    file_id_stage1 = 'AgACAgIAAxkBAAMcZX2DMP9OUsfqGLN6xzPeQwblEloAAr_OMRuERPBL54rWglK0zp8BAAMCAAN5AAMzBA'
+    await callback.message.answer_photo(photo=file_id_stage1, caption=MESSAGE_TEXT['stage1'], reply_markup=keyboard)
 
 
 @router.callback_query(F.data == 'done_stage1')
 async def process_buttons_press(callback: CallbackQuery):
     keyboard = keyboard_stage2()
-    file_id = 'AgACAgIAAxkBAAMiZXyQtixOXi17NjlCsA0361uYb84AAj_SMRv_zuhLLHYGgFNmcd0BAAMCAAN5AAMzBA'
+    file_id_stage2 = 'AgACAgIAAxkBAAMeZX2DcEaJsqlO6ndVmPA0Muj9_dUAAsHOMRuERPBLHZ6pl9mQdzsBAAMCAAN5AAMzBA'
     await callback.answer()
-    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage2'])
+    await callback.message.answer_photo(photo=file_id_stage2, caption=MESSAGE_TEXT['stage2'])
     await callback.message.answer(text=MESSAGE_TEXT['stage2_1'])
     await callback.message.answer(text=MESSAGE_TEXT['stage2_2'], reply_markup=keyboard)
 
@@ -132,8 +132,8 @@ async def process_buttons_press(callback: CallbackQuery):
 async def process_buttons_press(callback: CallbackQuery):
     keyboard = keyboard_stage3()
     await callback.answer()
-    file_id = 'AgACAgIAAxkBAAMkZXyQwMm6N8x99qUSGiXuu_wzve0AAkDSMRv_zuhLPHQimQJA5aEBAAMCAAN5AAMzBA'
-    await callback.message.answer_photo(photo=file_id, caption=MESSAGE_TEXT['stage3'], reply_markup=keyboard)
+    file_id_stage3 = 'AgACAgIAAxkBAAMgZX2DqTlSe1ooh4QKK2B8aJCyCy4AAsLOMRuERPBLCjF3gGFospwBAAMCAAN5AAMzBA'
+    await callback.message.answer_photo(photo=file_id_stage3, caption=MESSAGE_TEXT['stage3'], reply_markup=keyboard)
 
 
 @router.callback_query(F.data == 'done_stage3')
@@ -171,7 +171,7 @@ async def process_stage3(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.answer()
     await bot.send_message(chat_id=admin_id, text=f'Пользователь <a href="https://t.me/{callback.message.chat.username}">'
-                                                   f'{callback.message.chat.username}</a>'
-                                                   f' записался на полный разбор!')
+                                                  f'{callback.message.chat.username}</a>'
+                                                  f' записался на полный разбор!')
     await callback.message.answer(text=MESSAGE_TEXT['text2'])
     await callback.message.answer(text=MESSAGE_TEXT['text3'])
