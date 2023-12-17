@@ -17,6 +17,11 @@ def append_client(ID, name):
     client_sheet.append_row([ID, name])
 
 
+# добавить значения
+def append_start(ID, name):
+    start_sheet.append_row([ID, name])
+
+
 # поиск строки и столбца положения значения
 def values_row_col(value):
     values = client_sheet.get_all_values()
